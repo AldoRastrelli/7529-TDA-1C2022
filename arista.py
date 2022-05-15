@@ -30,5 +30,8 @@ class Arista:
     def tiene_capacidad_completa(self):
         return self.capacidad_ocupada == self.capacidad_total
 
+    def tiene_capacidad_disponible(self):
+        return self.capacidad_total > self.capacidad_ocupada
+
     def get_capacidad_disponible(self):
         return self.capacidad_total - self.capacidad_ocupada

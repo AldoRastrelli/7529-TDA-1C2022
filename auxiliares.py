@@ -62,7 +62,7 @@ def calcular_costo_para(ciclo_negativo, grafo, arista):
     primero = primer_nodo
     for i in range(1, len(ciclo_negativo)):
         segundo = arista[primero]
-        costo += grafo[segundo][primero]
+        costo += grafo[segundo][primero].costo
         primero = segundo
     return costo
 

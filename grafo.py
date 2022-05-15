@@ -1,11 +1,9 @@
 from re import A
 from site import addusersitepackages
 from tkinter import E
-from tokenize import PseudoExtras
 from arista import *
 from auxiliares import *
-from copy import deepcopy
-import time
+import copy
 
 
 class Grafo:
@@ -50,23 +48,20 @@ class Grafo:
     def print(self):
         print(f"Nodos: {list(self.nodos)}\n")
 
-        for n in self.nodos:
-            aristas_de_n = self.aristas[n]
-            print(n)
-            if len(aristas_de_n) == 0:
+        for nodo, aristas in self.aristas.items():
+            print(nodo)
+            if len(aristas) == 0:
                 print(" -- None -- ")
-            for dest in aristas_de_n:
-                arista = aristas_de_n[dest]
+            for dest, arista in aristas.items():
                 arista.print()
 
         print("\nAristas Residuales:")
 
-        for n in self.nodos:
-            aristas_de_n = self.aristas_residuales.get(n)
-            print(n)
-            if len(aristas_de_n) == 0:
+        for nodo, aristas in self.aristas.items():
+            print(nodo)
+            if len(aristas) == 0:
                 print(" -- None -- ")
-            for dest,arista in aristas_de_n.items():
+            for dest, arista in aristas.items():
                 arista.print()
 
     def busqueda_BFS(self, s, t, padre):
@@ -131,9 +126,19 @@ class Grafo:
     def get_grafo_residual(self):
         grafo_nuevo = Grafo()
         grafo_nuevo.nodos = self.nodos
-        grafo_nuevo.aristas = self.aristas
-        grafo_nuevo.aristas_residuales = self.aristas_residuales
-        grafo_nuevo.aristas.update(grafo_nuevo.aristas_residuales)
+
+        for origen, aristas_nodo in self.aristas.items():
+            for destino, arista in aristas_nodo.items():
+                print(f"{origen} -> {destino}")
+                self.aristas[origen][destino].print()
+                self.aristas_residuales[destino][origen].print()
+                if arista.tiene_capacidad_disponible():
+                    print("tiene capacidad disponible-> guardar arista")
+                    grafo_nuevo.guardar_arista(self.aristas[origen][destino])
+                    #grafo_nuevo.aristas[origen][destino].print()
+                if self.aristas_residuales[destino][origen].tiene_capacidad_disponible():
+                    print("tiene capacidad_disponible -> guardar arista residual")
+                    grafo_nuevo.guardar_arista(self.aristas_residuales[destino][origen])
 
         return grafo_nuevo
 
@@ -155,7 +160,7 @@ class Grafo:
                     continue
 
                 for arista in self.aristas[v]:
-                    peso = self.aristas[v][arista]
+                    peso = self.aristas[v][arista].costo
                     costo_min_anterior = distancias[iteracion][arista]
                     costo_nuevo = costo_vert + peso
 

@@ -11,9 +11,12 @@ def main():
     archivo = comandos[1].lower()
 
     grafo, origen, destino  = obtener_grafo_origen_destino_de(archivo)
-
     flujo_max = grafo.ford_fulkerson(origen,destino)
-    print(flujo_max)
+    #grafo.print()
+
+    grafo_residual = grafo.get_grafo_residual()
+    grafo_residual.print()
+    #print(grafo_residual.encontrar_ciclos_negativos(origen))
 
 def obtener_grafo_origen_destino_de(archivo):
 
