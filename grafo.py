@@ -4,6 +4,7 @@ from tkinter import E
 from tokenize import PseudoExtras
 from arista import *
 from auxiliares import *
+from copy import deepcopy
 import time
 
 
@@ -128,7 +129,10 @@ class Grafo:
         return flujo_max
 
     def get_grafo_residual(self):
-        grafo_nuevo = copy.copy(self)
+        grafo_nuevo = Grafo()
+        grafo_nuevo.nodos = self.nodos
+        grafo_nuevo.aristas = self.aristas
+        grafo_nuevo.aristas_residuales = self.aristas_residuales
         grafo_nuevo.aristas.update(grafo_nuevo.aristas_residuales)
 
         return grafo_nuevo
