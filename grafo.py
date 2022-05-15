@@ -129,15 +129,15 @@ class Grafo:
 
         for origen, aristas_nodo in self.aristas.items():
             for destino, arista in aristas_nodo.items():
-                print(f"{origen} -> {destino}")
-                self.aristas[origen][destino].print()
-                self.aristas_residuales[destino][origen].print()
+                #print(f"{origen} -> {destino}")
+                #self.aristas[origen][destino].print()
+                #self.aristas_residuales[destino][origen].print()
                 if arista.tiene_capacidad_disponible():
-                    print("tiene capacidad disponible-> guardar arista")
+                    #print("tiene capacidad disponible-> guardar arista")
                     grafo_nuevo.guardar_arista(self.aristas[origen][destino])
                     #grafo_nuevo.aristas[origen][destino].print()
                 if self.aristas_residuales[destino][origen].tiene_capacidad_disponible():
-                    print("tiene capacidad_disponible -> guardar arista residual")
+                    #print("tiene capacidad_disponible -> guardar arista residual")
                     grafo_nuevo.guardar_arista(self.aristas_residuales[destino][origen])
 
         return grafo_nuevo
@@ -147,6 +147,8 @@ class Grafo:
         hash_aristas_min = {}
         distancias = obtener_distancias(self,destino)
 
+        #print(self.aristas)
+
         for i in range(cant_nodos):
             if no_es_ultima_iteración(i,cant_nodos):
                 iteracion = ANTERIOR
@@ -155,18 +157,25 @@ class Grafo:
                 distancias[iteracion] = copy.copy(distancias[ANTERIOR])
 
             for v in self.nodos:
+                #print(f"Nodo: {v}")
                 costo_vert = distancias[iteracion][v]
                 if costo_aun_no_asignado(costo_vert):
+                    #print("No tiene costo asignado")
                     continue
 
-                for arista in self.aristas[v]:
-                    peso = self.aristas[v][arista].costo
-                    costo_min_anterior = distancias[iteracion][arista]
+                if not self.aristas.get(v):
+                    #print(f"Nodo {v} no tiene aristas")
+                    continue
+
+                for dest, arista in self.aristas[v].items():
+                    #print(f"{v} -> {dest}")
+                    peso = arista.costo
+                    costo_min_anterior = distancias[iteracion][dest]
                     costo_nuevo = costo_vert + peso
 
                     if costo_min_anterior > costo_nuevo:
-                        distancias[iteracion][arista] = costo_nuevo
-                        hash_aristas_min[arista] = v
+                        distancias[iteracion][dest] = costo_nuevo
+                        hash_aristas_min[dest] = v
 
         nodos_cambiados = get_diferencias(distancias)
         if esta_vacio(nodos_cambiados):

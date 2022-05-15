@@ -16,7 +16,7 @@ def main():
 
     grafo_residual = grafo.get_grafo_residual()
     grafo_residual.print()
-    #print(grafo_residual.encontrar_ciclos_negativos(origen))
+    print(grafo_residual.encontrar_ciclos_negativos(destino))
 
 def obtener_grafo_origen_destino_de(archivo):
 
