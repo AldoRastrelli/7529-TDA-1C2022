@@ -3,6 +3,7 @@ from site import addusersitepackages
 from tkinter import E
 from tokenize import PseudoExtras
 from arista import *
+from auxiliares import *
 import time
 
 
@@ -125,3 +126,44 @@ class Grafo:
                 v = padre[v]
 
         return flujo_max
+
+    def get_grafo_residual(self):
+        grafo_nuevo = copy.copy(self)
+        grafo_nuevo.aristas.update(grafo_nuevo.aristas_residuales)
+
+        return grafo_nuevo
+
+    def encontrar_ciclos_negativos(self, destino):
+        cant_nodos = len(self.nodos)
+        hash_aristas_min = {}
+        distancias = obtener_distancias(self,destino)
+
+        for i in range(cant_nodos):
+            if no_es_ultima_iteración(i,cant_nodos):
+                iteracion = ANTERIOR
+            else:
+                iteracion = ULTIMA
+                distancias[iteracion] = copy.copy(distancias[ANTERIOR])
+
+            for v in self.nodos:
+                costo_vert = distancias[iteracion][v]
+                if costo_aun_no_asignado(costo_vert):
+                    continue
+
+                for arista in self.aristas[v]:
+                    peso = self.aristas[v][arista]
+                    costo_min_anterior = distancias[iteracion][arista]
+                    costo_nuevo = costo_vert + peso
+
+                    if costo_min_anterior > costo_nuevo:
+                        distancias[iteracion][arista] = costo_nuevo
+                        hash_aristas_min[arista] = v
+
+        nodos_cambiados = get_diferencias(distancias)
+        if esta_vacio(nodos_cambiados):
+            return [], None
+        ciclo_negativo = encontrar_ciclo_en(nodos_cambiados, hash_aristas_min)
+
+        costo = calcular_costo_para(ciclo_negativo, self.aristas, hash_aristas_min)
+        ciclo_negativo.reverse()
+        return ciclo_negativo, costo
