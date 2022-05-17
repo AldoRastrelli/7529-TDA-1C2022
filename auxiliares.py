@@ -68,3 +68,14 @@ def calcular_costo_para(ciclo_negativo, grafo, arista):
 
 def esta_vacio(lista):
     return len(lista) == 0
+
+def calcular_min_arista(ciclo_negativo, grafo):
+    costo = inf
+    primer_nodo = ciclo_negativo[0]
+    primero = primer_nodo
+    for i in range(1, len(ciclo_negativo)):
+        segundo = ciclo_negativo[i]
+        costo_nuevo = grafo.aristas[primero][segundo].costo
+        costo = min(abs(costo), abs(costo_nuevo))
+        primero = segundo
+    return costo

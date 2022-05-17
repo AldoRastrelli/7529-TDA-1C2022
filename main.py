@@ -12,11 +12,20 @@ def main():
 
     grafo, origen, destino  = obtener_grafo_origen_destino_de(archivo)
     flujo_max = grafo.ford_fulkerson(origen,destino)
-    #grafo.print()
 
     grafo_residual = grafo.get_grafo_residual()
-    grafo_residual.print()
-    print(grafo_residual.encontrar_ciclos_negativos(destino))
+    ciclo_neg, _ = grafo_residual.encontrar_ciclos_negativos(destino)
+
+    while not esta_vacio(ciclo_neg):
+        valor_min_arista = calcular_min_arista(ciclo_neg, grafo_residual)
+        grafo.actualizar_flujo_en_ciclo(ciclo_neg, valor_min_arista)
+
+        grafo_residual = grafo.get_grafo_residual()
+        ciclo_neg, _ = grafo_residual.encontrar_ciclos_negativos(destino)
+    
+    costo_min = grafo.min_cost()
+
+    print(f"\n>> Costo Mínimo: {costo_min}, Capacidad Máxima: {flujo_max}\n")
 
 def obtener_grafo_origen_destino_de(archivo):
 

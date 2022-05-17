@@ -42,8 +42,6 @@ class Grafo:
             self.aristas_residuales[origen] = {dest: arista_res}
         else:
             self.aristas_residuales[origen][dest] = arista_res
-        
-        arista = self.aristas_residuales[origen][dest]
 
     def print(self):
         print(f"Nodos: {list(self.nodos)}\n")
@@ -57,7 +55,7 @@ class Grafo:
 
         print("\nAristas Residuales:")
 
-        for nodo, aristas in self.aristas.items():
+        for nodo, aristas in self.aristas_residuales.items():
             print(nodo)
             if len(aristas) == 0:
                 print(" -- None -- ")
@@ -129,15 +127,9 @@ class Grafo:
 
         for origen, aristas_nodo in self.aristas.items():
             for destino, arista in aristas_nodo.items():
-                #print(f"{origen} -> {destino}")
-                #self.aristas[origen][destino].print()
-                #self.aristas_residuales[destino][origen].print()
                 if arista.tiene_capacidad_disponible():
-                    #print("tiene capacidad disponible-> guardar arista")
                     grafo_nuevo.guardar_arista(self.aristas[origen][destino])
-                    #grafo_nuevo.aristas[origen][destino].print()
                 if self.aristas_residuales[destino][origen].tiene_capacidad_disponible():
-                    #print("tiene capacidad_disponible -> guardar arista residual")
                     grafo_nuevo.guardar_arista(self.aristas_residuales[destino][origen])
 
         return grafo_nuevo
@@ -147,8 +139,6 @@ class Grafo:
         hash_aristas_min = {}
         distancias = obtener_distancias(self,destino)
 
-        #print(self.aristas)
-
         for i in range(cant_nodos):
             if no_es_ultima_iteración(i,cant_nodos):
                 iteracion = ANTERIOR
@@ -157,18 +147,14 @@ class Grafo:
                 distancias[iteracion] = copy.copy(distancias[ANTERIOR])
 
             for v in self.nodos:
-                #print(f"Nodo: {v}")
                 costo_vert = distancias[iteracion][v]
                 if costo_aun_no_asignado(costo_vert):
-                    #print("No tiene costo asignado")
                     continue
 
                 if not self.aristas.get(v):
-                    #print(f"Nodo {v} no tiene aristas")
                     continue
 
                 for dest, arista in self.aristas[v].items():
-                    #print(f"{v} -> {dest}")
                     peso = arista.costo
                     costo_min_anterior = distancias[iteracion][dest]
                     costo_nuevo = costo_vert + peso
@@ -185,3 +171,33 @@ class Grafo:
         costo = calcular_costo_para(ciclo_negativo, self.aristas, hash_aristas_min)
         ciclo_negativo.reverse()
         return ciclo_negativo, costo
+
+    def actualizar_flujo_en_ciclo(self, ciclo, factor):
+        primer_nodo = ciclo[0]
+        primero = primer_nodo
+
+        for i in range(1, len(ciclo)):
+            segundo = ciclo[i]
+            arista = self.aristas[primero].get(segundo)
+
+            if not arista:
+                arista_res = self.aristas_residuales[primero][segundo]
+                arista_res.usar_capacidad(factor)
+                arista = self.aristas[segundo][primero]
+                arista.liberar_capacidad(factor)
+            
+            else:
+                arista.usar_capacidad(factor)
+                arista_res = self.aristas_residuales[segundo][primero]
+                arista_res.liberar_capacidad(factor)
+            
+            primero = segundo
+
+    def min_cost(self):
+        costo = 0
+        for origen, aristas in self.aristas.items():
+            for destino, arista in aristas.items():
+                if arista.capacidad_ocupada != 0:
+                    costo += arista.costo
+        
+        return costo
