@@ -78,7 +78,7 @@ class Grafo:
 
             v = cola.pop(0)
             for dest,arista in self.aristas[v].items():
-                if visitado[dest] == False and not arista.tiene_capacidad_completa():
+                if visitado[dest] == False and arista.tiene_capacidad_disponible():
                     cola.append(dest)
                     visitado[dest] = True
                     padre[dest] = v
@@ -107,7 +107,7 @@ class Grafo:
 
             flujo_max += min_flujo_en_camino
 
-            # Actualización de las capacidades residuales de las aristas y las aristas inversas a lo largo del camino
+            # Actualización de las capacidades residuales de las aristas y las aristas residuales a lo largo del camino
             v = target
             while (v != source):
                 
@@ -140,7 +140,7 @@ class Grafo:
         distancias = obtener_distancias(self,destino)
 
         for i in range(cant_nodos):
-            if no_es_ultima_iteración(i,cant_nodos):
+            if not es_ultima_iteración(i,cant_nodos):
                 iteracion = ANTERIOR
             else:
                 iteracion = ULTIMA
@@ -148,7 +148,7 @@ class Grafo:
 
             for v in self.nodos:
                 costo_vert = distancias[iteracion][v]
-                if costo_aun_no_asignado(costo_vert):
+                if not costo_asignado(costo_vert):
                     continue
 
                 if not self.aristas.get(v):
@@ -195,8 +195,8 @@ class Grafo:
 
     def min_cost(self):
         costo = 0
-        for origen, aristas in self.aristas.items():
-            for destino, arista in aristas.items():
+        for _, aristas in self.aristas.items():
+            for _, arista in aristas.items():
                 if arista.capacidad_ocupada != 0:
                     costo += arista.costo
         

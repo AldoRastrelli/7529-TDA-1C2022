@@ -27,9 +27,6 @@ class Arista:
             return
         self.capacidad_ocupada -= liberado
 
-    def tiene_capacidad_completa(self):
-        return self.capacidad_ocupada == self.capacidad_total
-
     def tiene_capacidad_disponible(self):
         return self.capacidad_total > self.capacidad_ocupada
 

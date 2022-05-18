@@ -19,11 +19,11 @@ def obtener_distancias(grafo, destino):
     distancia_nueva = {}
     return [distancia_ant, distancia_nueva]
 
-def no_es_ultima_iteración(i,n):
-    return i != (n-1)
+def es_ultima_iteración(i,n):
+    return i == (n-1)
 
-def costo_aun_no_asignado(costo_vert):
-    return costo_vert == inf
+def costo_asignado(costo_vert):
+    return costo_vert != inf
 
 def get_diferencias(distancia):
     diferentes = []
@@ -58,8 +58,7 @@ def encontrar_ciclo_en(nodos_cambiados, hash_aristas_min):
 
 def calcular_costo_para(ciclo_negativo, grafo, arista):
     costo = 0
-    primer_nodo = ciclo_negativo[0]
-    primero = primer_nodo
+    primero = ciclo_negativo[0]
     for i in range(1, len(ciclo_negativo)):
         segundo = arista[primero]
         costo += grafo[segundo][primero].costo
@@ -71,8 +70,7 @@ def esta_vacio(lista):
 
 def calcular_min_arista(ciclo_negativo, grafo):
     costo = inf
-    primer_nodo = ciclo_negativo[0]
-    primero = primer_nodo
+    primero = ciclo_negativo[0]
     for i in range(1, len(ciclo_negativo)):
         segundo = ciclo_negativo[i]
         costo_nuevo = grafo.aristas[primero][segundo].costo
