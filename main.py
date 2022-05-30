@@ -25,7 +25,7 @@ def main():
     
     costo_min = grafo.min_cost()
 
-    print(f"\n>> Costo Mínimo: {costo_min}, Capacidad Máxima: {flujo_max}\n")
+    print(f"\n>> Costo Mínimo de Viajes: ${costo_min}, Capacidad Máxima de Personas: {flujo_max}\n")
 
 def obtener_grafo_origen_destino_de(archivo):
 

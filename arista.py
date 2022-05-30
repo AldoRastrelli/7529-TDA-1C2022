@@ -1,4 +1,3 @@
-
 class Arista:
 
     def __init__(self, origen, destino, costo = 0, capacidad = 0 ):

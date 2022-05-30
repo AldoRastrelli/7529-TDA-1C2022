@@ -1,4 +1,3 @@
-from copy import copy
 from cmath import inf
 
 ANTERIOR = 0

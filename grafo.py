@@ -1,6 +1,3 @@
-from re import A
-from site import addusersitepackages
-from tkinter import E
 from arista import *
 from auxiliares import *
 import copy
@@ -198,6 +195,6 @@ class Grafo:
         for _, aristas in self.aristas.items():
             for _, arista in aristas.items():
                 if arista.capacidad_ocupada != 0:
-                    costo += arista.costo
+                    costo += arista.costo * arista.capacidad_ocupada
         
         return costo
